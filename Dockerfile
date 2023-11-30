@@ -17,4 +17,4 @@ RUN ./gradlew clean build
 ENV DATABASE_URL=jdbc:mariadb://mariadb/krampoline
 
 # 빌드 결과 jar 파일을 실행
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/home/gradle/project/build/libs/kakao-1.0.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "-Dhttp.proxyHost=krmp-proxy.9rum.cc", "-Dhttp.proxyPort=3128", "-Dhttps.proxyHost=krmp-proxy.9rum.cc", "-Dhttps.proxyPort=3128", "/home/gradle/project/build/libs/kakao-1.0.jar"]
