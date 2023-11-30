@@ -4,32 +4,39 @@ import com.example.kakao.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.net.URL;
 import com.google.gson.JsonParser;
 import javax.json.Json;
+import java.net.*;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CreateServiceImpl implements CreateService {
+
+    @Override
+    public String createImage(String keyword) {
+        String uri= midjourey(keyword);
+        return uri;
+    }
+
 
 
     public String[] createText(String keyword) throws JsonProcessingException {
@@ -40,6 +47,7 @@ public class CreateServiceImpl implements CreateService {
 
 
     }
+
 
 
 
@@ -97,13 +105,12 @@ public class CreateServiceImpl implements CreateService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
-        @Override
+    @Override
     public String chatGPT(String keyword) throws JsonProcessingException {
-        Dotenv dotenv = Dotenv.configure().load();
-
-        String apiKey = dotenv.get("OPEN_AI_API_KEY");
+        String apiKey = System.getenv("OPEN_AI_API_KEY");
         ObjectMapper mapper = new ObjectMapper();
         List<Message> messages = new ArrayList<>();
         StringBuilder prompt = new StringBuilder();
@@ -149,5 +156,52 @@ public class CreateServiceImpl implements CreateService {
         return text;
     }
 
+   @Override
+   public String midjourey(String keyword) {
+
+       String apiKey = System.getenv("OPEN_AI_API_KEY");
+       StringBuilder prompt = new StringBuilder();
+       prompt.append("Manjanggul Cave");
+       prompt.append("in Jeju");
+       String params = "prompt="+ URLEncoder.encode(prompt.toString(), StandardCharsets.UTF_8);
+
+       System.out.println(params);
+
+       HttpRequest request = HttpRequest.newBuilder()
+               .uri(URI.create("https://mj.medici-mansion.com/image?"+params))
+               .header("auth", apiKey)
+               .build();
+       System.out.println("request : "+ request);
+       HttpClient client = HttpClient.newHttpClient();
+       HttpResponse<String> response = null;
+       try {
+           response = client.send(request, HttpResponse.BodyHandlers.ofString());
+           System.out.println("response : " + response);
+       } catch (IOException | InterruptedException e) {
+           throw new RuntimeException(e);
+       }
+//       String responseBody = response.body();
+//       JSONArray jsonArray = new JSONArray(responseBody);
+//
+//       // 첫 번째 JSON 객체 가져오기
+//       JSONObject firstJsonObj = jsonArray.getJSONObject(0);
+//
+//       // 첫 번째 JSON 객체 출력하기
+//       System.out.println("First JSON object: " + firstJsonObj.toString());
+
+//
+//       JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
+//       JsonArray responses = jsonReader.readArray();
+//
+//       JsonObject firstResponse = responses.getJsonObject(0);
+//       String firstUri = firstResponse.getString("uri");
+//       List<String> uri = new ArrayList<>();
+//       for (int i = 1; i < responses.size(); i++) {
+//           JsonObject response = responses.getJsonObject(i);
+//           uri.add(response.getString("uri"));
+//       }
+       return "1";
+
+   }
 
 }
