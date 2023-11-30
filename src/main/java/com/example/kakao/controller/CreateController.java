@@ -30,10 +30,10 @@ public class CreateController {
         String[] result = createService.createText(requestDTO.getKeyword());
         List<Mess> text = new ArrayList<>();
         for(int i=0; i<result.length;i++){
-            String [] prompt = result[i].split("\n");
-            for(int j= 0; j< prompt.length;j++)
-            System.out.println(prompt[j]);
-            text.add(new Mess(prompt[1],prompt[3],prompt[5]));
+            // String [] prompt = result[i].split("\n");
+            // for(int j= 0; j< prompt.length;j++)
+            // System.out.println(prompt[j]);
+            text.add(new Mess(result[i],result[i],result[i]));
         }
 
         if(requestDTO.getLang().equals("ko"))
