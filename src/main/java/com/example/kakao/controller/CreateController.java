@@ -9,6 +9,7 @@ import com.example.kakao.service.CreateServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class CreateController {
     private final CreateService creatService;
     private final CreateServiceImpl createService;
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ResponseDTO createAll(@RequestBody RequestDTO requestDTO) throws JsonProcessingException {
 //        String uri = createService.createImage(requestDTO.getKeyword());
         String uri = "test";
