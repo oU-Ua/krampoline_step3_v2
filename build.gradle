@@ -18,6 +18,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    implementation 'javax.json:javax.json-api:1.1.4'
+    runtimeOnly 'org.glassfish:javax.json:1.1.4'
+    implementation 'io.github.cdimascio:java-dotenv:5.2.0'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.16.0'
+
 //    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 //    runtimeOnly 'com.h2database:h2'
     compileOnly 'org.projectlombok:lombok'
@@ -25,6 +32,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'junit:junit:4.13.2'
 
     // third party
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'

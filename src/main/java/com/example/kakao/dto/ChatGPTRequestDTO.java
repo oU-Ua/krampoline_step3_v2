@@ -1,5 +1,6 @@
 package com.example.kakao.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 
 import java.util.List;
@@ -9,9 +10,10 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonPropertyOrder({"model", "Message", "temperature"})
 public class ChatGPTRequestDTO {
     String model;
-    List<Message> Message;
+    List<Message> messages;
     double temperature;
 
 

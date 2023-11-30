@@ -18,6 +18,7 @@ public class ChatGPTResponseDTO {
     String model;
     Usage usage;
     List<Choice> choices;
+    String system_fingerprint;
 
 
 }
