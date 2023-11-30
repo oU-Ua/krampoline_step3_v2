@@ -23,8 +23,8 @@ public class CreateController {
 
     @PostMapping("/create")
     public ResponseDTO createAll(@RequestParam RequestDTO requestDTO) throws JsonProcessingException {
-//        String uri = createService.createImage(requestDTO.getKeyword());
-        String uri = "test";
+//       String uri = createService.createImage(requestDTO.getKeyword());
+        String uri = "https://cdn.discordapp.com/attachments/1153509131412570112/1179744989236965406/raymond.___Seongsan_Sunrise_Peak_in_Jeju_bdbb42ac-bf87-46ed-b83c-d582bb99c79a.png?ex=657ae624&is=65687124&hm=0d72c7ace0f7a430c17c7a633f2b8a85e9e565b88ec693b02a4a6f7e9baff0f1&";
         String[] result = createService.createText(requestDTO.getKeyword());
         List<Mess> text = new ArrayList<>();
         for(int i=0; i<result.length;i++){
