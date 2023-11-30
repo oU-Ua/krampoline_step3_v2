@@ -130,18 +130,18 @@ public class CreateServiceImpl implements CreateService {
        } catch (IOException | InterruptedException e) {
            throw new RuntimeException(e);
        }
-
-       JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
-       JsonArray responses = jsonReader.readArray();
-
-       JsonObject firstResponse = responses.getJsonObject(0);
-       String firstUri = firstResponse.getString("uri");
-       List<String> uri = new ArrayList<>();
-       for (int i = 1; i < responses.size(); i++) {
-           JsonObject response = responses.getJsonObject(i);
-           uri.add(response.getString("uri"));
-       }
-       return firstUri;
+       System.out.println(responseBody);
+//       JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
+//       JsonArray responses = jsonReader.readArray();
+//
+//       JsonObject firstResponse = responses.getJsonObject(0);
+//       String firstUri = firstResponse.getString("uri");
+//       List<String> uri = new ArrayList<>();
+//       for (int i = 1; i < responses.size(); i++) {
+//           JsonObject response = responses.getJsonObject(i);
+//           uri.add(response.getString("uri"));
+//       }
+       return responseBody;
 
    }
 

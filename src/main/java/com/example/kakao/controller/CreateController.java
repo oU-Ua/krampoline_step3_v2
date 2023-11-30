@@ -23,8 +23,8 @@ public class CreateController {
 
     @PostMapping("/create")
     public ResponseDTO createAll(@RequestParam RequestDTO requestDTO) throws JsonProcessingException {
-//        String uri = createService.createImage(requestDTO.getKeyword());
-        String uri = "test";
+        String uri = createService.createImage(requestDTO.getKeyword());
+//        String uri = "test";
         String[] result = createService.createText(requestDTO.getKeyword());
         List<Mess> text = new ArrayList<>();
         for(int i=0; i<result.length;i++){
