@@ -115,22 +115,31 @@ public class CreateServiceImpl implements CreateService {
        prompt.append("in Jeju");
        String params = "prompt="+ URLEncoder.encode(prompt.toString(), StandardCharsets.UTF_8);
 
+       System.out.println(params);
 
        HttpRequest request = HttpRequest.newBuilder()
-               .uri(URI.create("https://mj.medici-mansion.com/image?"))
+               .uri(URI.create("https://mj.medici-mansion.com/image?"+params))
                .header("auth", apiKey)
-               .POST(HttpRequest.BodyPublishers.ofString(params))
                .build();
-
+       System.out.println("request : "+ request);
        HttpClient client = HttpClient.newHttpClient();
-
-       String responseBody = null;
+       HttpResponse<String> response = null;
        try {
-           responseBody = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+           response = client.send(request, HttpResponse.BodyHandlers.ofString());
+           System.out.println("response : " + response);
        } catch (IOException | InterruptedException e) {
            throw new RuntimeException(e);
        }
-       System.out.println(responseBody);
+//       String responseBody = response.body();
+//       JSONArray jsonArray = new JSONArray(responseBody);
+//
+//       // 첫 번째 JSON 객체 가져오기
+//       JSONObject firstJsonObj = jsonArray.getJSONObject(0);
+//
+//       // 첫 번째 JSON 객체 출력하기
+//       System.out.println("First JSON object: " + firstJsonObj.toString());
+
+//
 //       JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
 //       JsonArray responses = jsonReader.readArray();
 //
@@ -141,7 +150,7 @@ public class CreateServiceImpl implements CreateService {
 //           JsonObject response = responses.getJsonObject(i);
 //           uri.add(response.getString("uri"));
 //       }
-       return responseBody;
+       return "1";
 
    }
 
