@@ -94,6 +94,7 @@ public class CreateServiceImpl implements CreateService {
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
+
             br.close();
             return content;
 
