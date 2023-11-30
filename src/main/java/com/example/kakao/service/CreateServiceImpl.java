@@ -42,8 +42,13 @@ public class CreateServiceImpl implements CreateService {
     public String[] createText(String keyword) throws JsonProcessingException {
         String  response = chatGPT(keyword);
         String[] textlist = response.split("\n\n");
-
-        return textlist;
+        if(textlist.length<=4) return textlist;
+        String [] textlist2 = new String[4];
+        for(int i=0;i<4;i++){
+            textlist2[i] = textlist[i];
+        }
+        
+        return textlist2;
 
 
     }
@@ -118,7 +123,7 @@ public class CreateServiceImpl implements CreateService {
         prompt.append("당신은 제주도 관광가이드입니다. ");
         prompt.append(keyword);
         prompt.append("에 관광하고싶어하는 외국인에게 설명해주세요.");
-        prompt.append("장소에 대한 설명, 그 장소에서 할 수 있는 체험이나 활동, 역사에 대해 알려주세요. ");
+        prompt.append("소제목은 장소 이름으로 작성해주세요. 그리고 장소의 주소를 가장 먼저 알려주세요. 마지막으로 장소에 대한 설명과 그 장소에서 할 수 있는 체험이나 활동을 알려주세요.. ");
         messages.add(new Message("user", prompt.toString()));
 
         ChatGPTRequestDTO chatGptRequest = new ChatGPTRequestDTO("gpt-4", messages, 0.7);
