@@ -4,6 +4,7 @@ import com.example.kakao.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.net.URL;
 import com.google.gson.JsonParser;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -14,30 +15,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CreateServiceImpl implements CreateService {
-
-    @Override
-    public String createImage(String keyword) {
-        String uri= midjourey(keyword);
-        return uri;
-    }
-
 
 
     public String[] createText(String keyword) throws JsonProcessingException {
@@ -48,14 +40,69 @@ public class CreateServiceImpl implements CreateService {
 
 
     }
-    public String transfer(String text, String language){
-        if(language.equals("kr"))
-            return text;
-        text = "transfertest";
-        return text;
+
+
+
+    public String[] transfer(String[] text, String lang){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<text.length;i++){
+            sb.append(text[i]);
+        }
+        String txt = sb.toString();
+
+        String result = papago(txt,lang);
+        String [] results = result.split("\n\n");
+        System.out.println(Arrays.toString(results));
+        return results;
     }
 
-    @Override
+    public String papago(String txt, String lang) {
+        Dotenv dotenv = Dotenv.configure().load();
+
+        String clientSecret = dotenv.get("X-NCP-APIGW-API-KEY");
+        String clientId = "s1axzu9x6n";
+        StringBuffer response;
+        try {
+            String text = URLEncoder.encode(txt, "UTF-8");
+            String apiURL = "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation";
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
+            con.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
+            // post request
+            String postParams = "source=ko&target="+lang+"&text=" + text;
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(postParams);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            BufferedReader br;
+            if (responseCode == 200) { // 정상 호출
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } else {  // 오류 발생
+                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            }
+            String inputLine;
+            response = new StringBuffer();
+            while ((inputLine = br.readLine()) != null) {
+                response.append(inputLine);
+            }
+            br.close();
+            return response.toString();
+
+
+        } catch (ProtocolException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+        @Override
     public String chatGPT(String keyword) throws JsonProcessingException {
         Dotenv dotenv = Dotenv.configure().load();
 
@@ -105,53 +152,5 @@ public class CreateServiceImpl implements CreateService {
         return text;
     }
 
-   @Override
-   public String midjourey(String keyword) {
-       Dotenv dotenv = Dotenv.configure().load();
-
-       String apiKey = dotenv.get("OPEN_AI_API_KEY");
-       StringBuilder prompt = new StringBuilder();
-       prompt.append("Manjanggul Cave");
-       prompt.append("in Jeju");
-       String params = "prompt="+ URLEncoder.encode(prompt.toString(), StandardCharsets.UTF_8);
-
-       System.out.println(params);
-
-       HttpRequest request = HttpRequest.newBuilder()
-               .uri(URI.create("https://mj.medici-mansion.com/image?"+params))
-               .header("auth", apiKey)
-               .build();
-       System.out.println("request : "+ request);
-       HttpClient client = HttpClient.newHttpClient();
-       HttpResponse<String> response = null;
-       try {
-           response = client.send(request, HttpResponse.BodyHandlers.ofString());
-           System.out.println("response : " + response);
-       } catch (IOException | InterruptedException e) {
-           throw new RuntimeException(e);
-       }
-//       String responseBody = response.body();
-//       JSONArray jsonArray = new JSONArray(responseBody);
-//
-//       // 첫 번째 JSON 객체 가져오기
-//       JSONObject firstJsonObj = jsonArray.getJSONObject(0);
-//
-//       // 첫 번째 JSON 객체 출력하기
-//       System.out.println("First JSON object: " + firstJsonObj.toString());
-
-//
-//       JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
-//       JsonArray responses = jsonReader.readArray();
-//
-//       JsonObject firstResponse = responses.getJsonObject(0);
-//       String firstUri = firstResponse.getString("uri");
-//       List<String> uri = new ArrayList<>();
-//       for (int i = 1; i < responses.size(); i++) {
-//           JsonObject response = responses.getJsonObject(i);
-//           uri.add(response.getString("uri"));
-//       }
-       return "1";
-
-   }
 
 }
