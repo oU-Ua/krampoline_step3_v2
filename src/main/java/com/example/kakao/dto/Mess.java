@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class Mess {
-    int id;
+    String location;
     String description;
+    String address;
 }

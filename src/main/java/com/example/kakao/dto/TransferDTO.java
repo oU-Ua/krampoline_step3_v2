@@ -9,5 +9,8 @@ import lombok.*;
 @Builder
 public class TransferDTO {
     String srcLangType;
+    String tarLangType;
+    String translatedText;
+
 
 }

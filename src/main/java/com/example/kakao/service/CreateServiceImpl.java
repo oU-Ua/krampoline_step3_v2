@@ -42,17 +42,7 @@ public class CreateServiceImpl implements CreateService {
     public String[] createText(String keyword) throws JsonProcessingException {
         String  response = chatGPT(keyword);
         String[] textlist = response.split("\n\n");
-        if(textlist.length<=12)
-            return textlist;
-
-        else{
-            String [] textlist2 = new String[12];
-            for(int i=0;i<12;i++){
-                textlist2[i] = textlist[i];
-            }
-            return textlist2;
-        }
-
+        return textlist;
 
     }
 
@@ -97,13 +87,15 @@ public class CreateServiceImpl implements CreateService {
             } else {  // 오류 발생
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
+            String content = con.getContent().toString();
             String inputLine;
             response = new StringBuffer();
+
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
             br.close();
-            return response.toString();
+            return content;
 
 
         } catch (ProtocolException e) {
@@ -123,10 +115,17 @@ public class CreateServiceImpl implements CreateService {
         List<Message> messages = new ArrayList<>();
         StringBuilder prompt = new StringBuilder();
 
-        prompt.append("당신은 제주도 관광가이드입니다. ");
+        prompt.append("당신은 제주도 관광가이드입니다. 제주도의 관광지에 대해서 질문을 할거에요. 당신은 그 관광지 1개와 근처에 존재하는 관광지를 소개해주면 좋겠습니다. 내 질문에 대답 외의 설명은 필요없습니다.\n" +
+                "\n" +
+                "\"여행지 이름\"\n" +
+                "\"소개\"\n" +
+                "\"주소\"\n" +
+                "\n" +
+                "의 구조이고, 첫줄은 내가 입력한 여행지입니다.\n" +
+                "제가 입력한 여행지 외에 추천해 주는 여행지는 3개를 넘으면 안돼요.\n" +
+                "\n" +
+                "입력한 여행지 : ");
         prompt.append(keyword);
-        prompt.append("에 관광하고싶어하는 외국인에게 설명해주세요.");
-        prompt.append("소제목은 장소 이름으로 작성해주세요. 그다음 줄에는 장소의 주소를 먼저 알려주세요. 그 다음줄에는 장소에 대한 설명과 그 장소에서 할 수 있는 체험이나 활동을 한줄로 알려주세요. ");
         messages.add(new Message("user", prompt.toString()));
 
         ChatGPTRequestDTO chatGptRequest = new ChatGPTRequestDTO("gpt-4", messages, 0.7);

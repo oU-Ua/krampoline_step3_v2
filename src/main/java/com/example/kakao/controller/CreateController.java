@@ -30,23 +30,23 @@ public class CreateController {
         String[] result = createService.createText(requestDTO.getKeyword());
         List<Mess> text = new ArrayList<>();
         for(int i=0; i<result.length;i++){
-            text.add(new Mess(i+1,result[i]));
+            String [] prompt = result[i].split("\n");
+            text.add(new Mess(prompt[1],prompt[3],prompt[5]));
         }
 
         if(requestDTO.getLang().equals("ko"))
             return new ResponseDTO(uri,text);
 
         if (requestDTO.getLang().equals("ko")) {
-            for(int i=0; i<result.length;i++){
-                text.add(new Mess(i+1,result[i]));
-            }
             return new ResponseDTO(uri, text);
         }
 
         String[] text1 = createService.transfer(result, requestDTO.getLang());
         for(int i=0; i<text1.length;i++){
-            text.add(new Mess(i+1,text1[i]));
+            String [] prompt = text1[i].split("\n");
+            text.add(new Mess(prompt[1],prompt[3],prompt[5]));
         }
+
 
         return new ResponseDTO(uri,text);
     }
