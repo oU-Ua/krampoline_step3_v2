@@ -32,7 +32,7 @@ public class CreateController {
         for(int i=0; i<result.length;i++){
              String [] prompt = result[i].split("\n");
 
-            text.add(new Mess(prompt[1],prompt[2],prompt[3]));
+            text.add(new Mess(prompt[0],prompt[1],prompt[2]));
         }
 
         if(requestDTO.getLang().equals("ko"))
