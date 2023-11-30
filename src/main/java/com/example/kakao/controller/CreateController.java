@@ -37,11 +37,11 @@ public class CreateController {
             }
             return new ResponseDTO(uri, text);
         }
-//
-//        String[] text1 = createService.transfer(result, requestDTO.getLang());
-//        for(int i=0; i<text1.length;i++){
-//            text.add(new Mess(i+1,text1[i]));
-//        }
+
+        String[] text1 = createService.transfer(result, requestDTO.getLang());
+        for(int i=0; i<text1.length;i++){
+            text.add(new Mess(i+1,text1[i]));
+        }
         return new ResponseDTO(uri,text);
     }
 }

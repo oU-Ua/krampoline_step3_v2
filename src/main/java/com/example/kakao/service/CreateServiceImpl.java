@@ -44,16 +44,13 @@ public class CreateServiceImpl implements CreateService {
 
 
     public String[] transfer(String[] text, String lang){
-        StringBuilder sb = new StringBuilder();
+        String [] trasfers = new String [text.length];
         for(int i=0;i<text.length;i++){
-            sb.append(text[i]);
+            String result = papago(text[i],lang);
+            trasfers[i]=result;
         }
-        String txt = sb.toString();
 
-        String result = papago(txt,lang);
-        String [] results = result.split("\n\n");
-        System.out.println(Arrays.toString(results));
-        return results;
+        return trasfers;
     }
 
     public String papago(String txt, String lang) {
