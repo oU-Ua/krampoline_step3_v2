@@ -3,4 +3,3 @@
 /build
 src/main/resources/application-api.yml
 api-config.yml
-.env
