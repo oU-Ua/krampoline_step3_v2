@@ -8,5 +8,6 @@ import lombok.*;
 @Setter
 @Builder
 public class TransferDTO {
+    String srcLangType;
 
 }
