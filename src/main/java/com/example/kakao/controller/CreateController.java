@@ -31,7 +31,7 @@ public class CreateController {
             text.add(new Mess(i+1,result[i]));
         }
 
-        if(requestDTO.getLanguage().equals("ko"))
+        if(requestDTO.getLang().equals("ko"))
             return new ResponseDTO(uri,text);
 
 //        String text1 = createService.transfer(text, requestDTO.getLanguage());

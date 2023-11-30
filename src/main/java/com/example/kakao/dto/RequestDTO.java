@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class RequestDTO {
-    String language;
+    String lang;
     String keyword;
 
 }
