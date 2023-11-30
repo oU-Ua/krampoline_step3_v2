@@ -160,6 +160,7 @@ public class CreateServiceImpl implements CreateService {
         }
         List<Choice> choices = dto.getChoices();
         String text = choices.get(0).getMessage().getContent();
+        System.out.println(text);
         return text;
     }
 
