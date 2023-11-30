@@ -9,19 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api") 
+@RequestMapping("/api")
 public class SampleRestController {
-
-    private final SampleDataRepository sampleDataRepository;
-
     @GetMapping("/test")
     public ResponseEntity<?> pingTest() {
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok("hello");
     }
 
-    @GetMapping("/db")
-    public ResponseEntity<?> dbTest() {
-        List<SampleData> sampleDataList = sampleDataRepository.findAll();
-        return ResponseEntity.ok(sampleDataList);
-    }
 }
