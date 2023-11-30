@@ -9,7 +9,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,9 +57,7 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     public String chatGPT(String keyword) throws JsonProcessingException {
-        Dotenv dotenv = Dotenv.configure().load();
-
-        String apiKey = dotenv.get("OPEN_AI_API_KEY");
+        String apiKey = System.getenv("OPEN_AI_API_KEY");
         ObjectMapper mapper = new ObjectMapper();
         List<Message> messages = new ArrayList<>();
         StringBuilder prompt = new StringBuilder();
@@ -107,9 +105,8 @@ public class CreateServiceImpl implements CreateService {
 
    @Override
    public String midjourey(String keyword) {
-       Dotenv dotenv = Dotenv.configure().load();
 
-       String apiKey = dotenv.get("OPEN_AI_API_KEY");
+       String apiKey = System.getenv("OPEN_AI_API_KEY");
        StringBuilder prompt = new StringBuilder();
        prompt.append("Manjanggul Cave");
        prompt.append("in Jeju");

@@ -19,6 +19,12 @@ spec:
           env:
             - name: TZ
               value: Asia/Seoul
+            - name: OPEN_AI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: OPEN_AI_API_KEY
+                  optional: false
           resources:
             requests:
               memory: 1Gi
