@@ -17,6 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins ="*", allowedHeaders = "*")
 public class CreateController {
     private final CreateService creatService;
     private final CreateServiceImpl createService;
