@@ -95,8 +95,12 @@ public class CreateServiceImpl implements CreateService {
             }
             String getresult = response.toString();
 
-            getresult = getresult.split("\"")[15];   //스플릿으로 번역된 결과값만 가져오기
-            return getresult;
+            String result1 = getresult.split("\"")[15];   //스플릿으로 번역된 결과값만 가져오기
+            int i=15;
+            while (result1.length() <=10){
+                result1 = getresult.split("\"") [15+i];
+            }
+            return result1;
 
 
         } catch (ProtocolException e) {
@@ -194,26 +198,7 @@ public class CreateServiceImpl implements CreateService {
        } catch (IOException | InterruptedException e) {
            throw new RuntimeException(e);
        }
-//       String responseBody = response.body();
-//       JSONArray jsonArray = new JSONArray(responseBody);
-//
-//       // 첫 번째 JSON 객체 가져오기
-//       JSONObject firstJsonObj = jsonArray.getJSONObject(0);
-//
-//       // 첫 번째 JSON 객체 출력하기
-//       System.out.println("First JSON object: " + firstJsonObj.toString());
 
-//
-//       JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
-//       JsonArray responses = jsonReader.readArray();
-//
-//       JsonObject firstResponse = responses.getJsonObject(0);
-//       String firstUri = firstResponse.getString("uri");
-//       List<String> uri = new ArrayList<>();
-//       for (int i = 1; i < responses.size(); i++) {
-//           JsonObject response = responses.getJsonObject(i);
-//           uri.add(response.getString("uri"));
-//       }
        return "1";
 
    }
