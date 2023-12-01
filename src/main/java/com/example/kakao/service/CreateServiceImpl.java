@@ -4,15 +4,16 @@ import com.example.kakao.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javax.json.Json;
 import java.net.*;
 import javax.json.JsonArray;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,16 +88,15 @@ public class CreateServiceImpl implements CreateService {
             } else {  // 오류 발생
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
-            String content = con.getContent().toString();
             String inputLine;
             response = new StringBuffer();
-
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
+            String getresult = response.toString();
 
-            br.close();
-            return content;
+            getresult = getresult.split("\"")[27];   //스플릿으로 번역된 결과값만 가져오기
+            return getresult;
 
 
         } catch (ProtocolException e) {
@@ -108,6 +108,10 @@ public class CreateServiceImpl implements CreateService {
         }
 
     }
+
+
+
+
 
     @Override
     public String chatGPT(String keyword) throws JsonProcessingException {
