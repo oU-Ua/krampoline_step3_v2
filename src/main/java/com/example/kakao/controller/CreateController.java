@@ -2,6 +2,7 @@ package com.example.kakao.controller;
 
 import com.example.kakao.dto.Mess;
 import com.example.kakao.dto.RequestDTO;
+import com.example.kakao.dto.Response2DTO;
 import com.example.kakao.dto.ResponseDTO;
 import com.example.kakao.service.CreateService;
 import com.example.kakao.service.CreateServiceImpl;
@@ -24,7 +25,7 @@ public class CreateController {
     private final CreateServiceImpl createService;
 
     @PostMapping("/create")
-    public ResponseDTO createAll(@RequestBody RequestDTO requestDTO) throws JsonProcessingException {
+    public Response2DTO createAll(@RequestBody RequestDTO requestDTO) throws JsonProcessingException {
 //        String uri = createService.createImage(requestDTO.getKeyword());
         String uri = "https://cdn.discordapp.com/attachments/1153509131412570112/1179744989236965406/raymond.___Seongsan_Sunrise_Peak_in_Jeju_bdbb42ac-bf87-46ed-b83c-d582bb99c79a.png?ex=657ae624&is=65687124&hm=0d72c7ace0f7a430c17c7a633f2b8a85e9e565b88ec693b02a4a6f7e9baff0f1&";
         String[] result = createService.createText(requestDTO.getKeyword());
@@ -36,19 +37,13 @@ public class CreateController {
         }
 
         if(requestDTO.getLang().equals("ko"))
-            return new ResponseDTO(uri,text);
+            return new Response2DTO(uri,result);
 
-        if (requestDTO.getLang().equals("ko")) {
-            return new ResponseDTO(uri, text);
-        }
+
 
         String[] text1 = createService.transfer(result, requestDTO.getLang());
-        for(int i=0; i<text1.length;i++){
-            String [] prompt = text1[i].split("\n");
-            text.add(new Mess(prompt[1],prompt[3],prompt[5]));
-        }
 
 
-        return new ResponseDTO(uri,text);
+        return new Response2DTO(uri,text1);
     }
 }

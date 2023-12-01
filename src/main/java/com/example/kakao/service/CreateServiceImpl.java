@@ -95,7 +95,7 @@ public class CreateServiceImpl implements CreateService {
             }
             String getresult = response.toString();
 
-            getresult = getresult.split("\"")[27];   //스플릿으로 번역된 결과값만 가져오기
+            getresult = getresult.split("\"")[15];   //스플릿으로 번역된 결과값만 가져오기
             return getresult;
 
 
