@@ -12,6 +12,6 @@ public interface CreateService {
     public String[] createText(String keyword) throws JsonProcessingException;
     public String[] transfer(String[] text, String language);
     public String chatGPT(String keyword) throws JsonProcessingException;
-    public String midjourey(String keyword);
+    public String karlo(String keyword);
 
 }
