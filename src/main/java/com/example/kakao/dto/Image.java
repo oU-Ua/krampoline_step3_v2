@@ -1,20 +1,16 @@
 package com.example.kakao.dto;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
-import java.util.List;
-import java.awt.*;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ImageResponseDTO {
+public class Image {
     private String id;
-    private String model_version;
-    private List<Image> images;
+    private String image;
+    private int seed;
+    private Object nsfw_content_detected; // null을 처리하기 위해 Object를 사용
+    private Object nsfw_score; // null을 처리하기 위해 Object를 사용
 }

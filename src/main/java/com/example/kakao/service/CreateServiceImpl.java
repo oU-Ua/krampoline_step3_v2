@@ -34,7 +34,7 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     public String createImage(String keyword) {
-        String uri= midjourey(keyword);
+        String uri= karlo(keyword);
         return uri;
     }
 
@@ -119,7 +119,10 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     public String chatGPT(String keyword) throws JsonProcessingException {
-        String apiKey = System.getenv("OPEN_AI_API_KEY");
+        //String apiKey = System.getenv("OPEN_AI_API_KEY");
+        Dotenv dotenv = Dotenv.configure().load();
+        String apiKey = dotenv.get("OPEN_AI_API_KEY");
+
         ObjectMapper mapper = new ObjectMapper();
         List<Message> messages = new ArrayList<>();
         StringBuilder prompt = new StringBuilder();
@@ -175,31 +178,43 @@ public class CreateServiceImpl implements CreateService {
     }
 
    @Override
-   public String midjourey(String keyword) {
+   public String karlo(String keyword) {
 
-       String apiKey = System.getenv("OPEN_AI_API_KEY");
+       Dotenv dotenv = Dotenv.configure().load();
+       String apiKey = dotenv.get("KAKAO_API_KEY");
+
        StringBuilder prompt = new StringBuilder();
-       prompt.append("Manjanggul Cave");
-       prompt.append("in Jeju");
-       String params = "prompt="+ URLEncoder.encode(prompt.toString(), StandardCharsets.UTF_8);
-
-       System.out.println(params);
+       prompt.append(keyword);
+       prompt.append("+in+Jeju");
+       ObjectMapper mapper = new ObjectMapper();
+       ImageRequestDTO imageRequestDTO = new ImageRequestDTO(prompt.toString());
+       String input = null;
+       try {
+           input = mapper.writeValueAsString(imageRequestDTO);
+       } catch (JsonProcessingException e) {
+           throw new RuntimeException(e);
+       }
 
        HttpRequest request = HttpRequest.newBuilder()
-               .uri(URI.create("https://mj.medici-mansion.com/image?"+params))
-               .header("auth", apiKey)
+               .uri(URI.create("https://api.kakaobrain.com/v2/inference/karlo/t2i"))
+               .header("Content-Type", "application/json")
+               .header("Authorization","KakaoAK "+ apiKey)
+               .POST(HttpRequest.BodyPublishers.ofString(input))
                .build();
        System.out.println("request : "+ request);
        HttpClient client = HttpClient.newHttpClient();
        HttpResponse<String> response = null;
        try {
            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-           System.out.println("response : " + response);
+           ObjectMapper mapper1 = new ObjectMapper();
+           ImageResponseDTO dto;
+           dto = mapper1.readValue(response.body(),ImageResponseDTO.class);
+           List<Image> result = dto.getImages();
+           String url = result.get(0).getImage();
+           return url;
        } catch (IOException | InterruptedException e) {
            throw new RuntimeException(e);
        }
-
-       return "1";
 
    }
 
