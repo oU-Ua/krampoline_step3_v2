@@ -4,28 +4,18 @@ import com.example.kakao.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import javax.json.Json;
-import java.net.*;
-import javax.json.JsonArray;
-import javax.json.JsonReader;
-
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -184,10 +174,11 @@ public class CreateServiceImpl implements CreateService {
        String apiKey = dotenv.get("KAKAO_API_KEY");
 
        StringBuilder prompt = new StringBuilder();
+//       prompt.append("natural landscape, ");
        prompt.append(keyword);
        prompt.append("+in+Jeju");
        ObjectMapper mapper = new ObjectMapper();
-       ImageRequestDTO imageRequestDTO = new ImageRequestDTO(prompt.toString());
+       ImageRequestDTO imageRequestDTO = new ImageRequestDTO(prompt.toString(),"person");
        String input = null;
        try {
            input = mapper.writeValueAsString(imageRequestDTO);
@@ -211,6 +202,7 @@ public class CreateServiceImpl implements CreateService {
            dto = mapper1.readValue(response.body(),ImageResponseDTO.class);
            List<Image> result = dto.getImages();
            String url = result.get(0).getImage();
+           System.out.println(url);
            return url;
        } catch (IOException | InterruptedException e) {
            throw new RuntimeException(e);

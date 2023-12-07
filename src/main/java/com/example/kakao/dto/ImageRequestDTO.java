@@ -9,4 +9,5 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageRequestDTO {
     String prompt;
+    String negative_prompt;
 }
