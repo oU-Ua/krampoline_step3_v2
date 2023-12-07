@@ -2,6 +2,7 @@ package com.example.kakao.service;
 
 import com.example.kakao.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.JsonObject;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -34,7 +36,7 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     public String createImage(String keyword) {
-        String uri= midjourey(keyword);
+        String uri= karlo(keyword);
         return uri;
     }
 
@@ -95,8 +97,12 @@ public class CreateServiceImpl implements CreateService {
             }
             String getresult = response.toString();
 
-            getresult = getresult.split("\"")[15];   //스플릿으로 번역된 결과값만 가져오기
-            return getresult;
+            String result1 = getresult.split("\"")[15];   //스플릿으로 번역된 결과값만 가져오기
+            int i=15;
+            while (result1.length() <=10){
+                result1 = getresult.split("\"") [15+i];
+            }
+            return result1;
 
 
         } catch (ProtocolException e) {
@@ -115,6 +121,7 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     public String chatGPT(String keyword) throws JsonProcessingException {
+
         String apiKey = System.getenv("OPEN_AI_API_KEY");
         ObjectMapper mapper = new ObjectMapper();
         List<Message> messages = new ArrayList<>();
@@ -138,7 +145,6 @@ public class CreateServiceImpl implements CreateService {
         String input = null;
         input = mapper.writeValueAsString(chatGptRequest);
         System.out.println(input);
-        System.out.println("apikey : " + apiKey);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.openai.com/v1/chat/completions"))
@@ -171,50 +177,47 @@ public class CreateServiceImpl implements CreateService {
     }
 
    @Override
-   public String midjourey(String keyword) {
+   public String karlo(String keyword) {
 
-       String apiKey = System.getenv("OPEN_AI_API_KEY");
+       Dotenv dotenv = Dotenv.configure().load();
+
+       String apiKey = dotenv.get("KAKAO_API_KEY");
        StringBuilder prompt = new StringBuilder();
-       prompt.append("Manjanggul Cave");
-       prompt.append("in Jeju");
-       String params = "prompt="+ URLEncoder.encode(prompt.toString(), StandardCharsets.UTF_8);
+       prompt.append(keyword);
+       prompt.append("+in+Jeju");
+       ObjectMapper mapper = new ObjectMapper();
 
-       System.out.println(params);
+       ImageRequestDTO imageRequestDTO = new ImageRequestDTO(prompt.toString());
+       String input = null;
+       try {
+           input = mapper.writeValueAsString(imageRequestDTO);
+       } catch (JsonProcessingException e) {
+           throw new RuntimeException(e);
+       }
 
        HttpRequest request = HttpRequest.newBuilder()
-               .uri(URI.create("https://mj.medici-mansion.com/image?"+params))
-               .header("auth", apiKey)
+               .uri(URI.create("https://api.kakaobrain.com/v2/inference/karlo/t2i"))
+               .header("Content-Type", "application/json")
+               .header("Authorization","KakaoAK "+ apiKey)
+               .POST(HttpRequest.BodyPublishers.ofString(input))
                .build();
        System.out.println("request : "+ request);
        HttpClient client = HttpClient.newHttpClient();
        HttpResponse<String> response = null;
        try {
            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-           System.out.println("response : " + response);
-       } catch (IOException | InterruptedException e) {
+           ObjectMapper mapper1 = new ObjectMapper();
+           ImageResponseDTO dto;
+           dto = mapper1.readValue(response.body(),ImageResponseDTO.class);
+           List<Image> result = dto.getImages();
+           String url = result.get(0).getImage();
+           return url;
+       } catch (IOException e) {
+           throw new RuntimeException(e);
+       } catch (InterruptedException e) {
            throw new RuntimeException(e);
        }
-//       String responseBody = response.body();
-//       JSONArray jsonArray = new JSONArray(responseBody);
-//
-//       // 첫 번째 JSON 객체 가져오기
-//       JSONObject firstJsonObj = jsonArray.getJSONObject(0);
-//
-//       // 첫 번째 JSON 객체 출력하기
-//       System.out.println("First JSON object: " + firstJsonObj.toString());
 
-//
-//       JsonReader jsonReader = Json.createReader(new StringReader(responseBody));
-//       JsonArray responses = jsonReader.readArray();
-//
-//       JsonObject firstResponse = responses.getJsonObject(0);
-//       String firstUri = firstResponse.getString("uri");
-//       List<String> uri = new ArrayList<>();
-//       for (int i = 1; i < responses.size(); i++) {
-//           JsonObject response = responses.getJsonObject(i);
-//           uri.add(response.getString("uri"));
-//       }
-       return "1";
 
    }
 
