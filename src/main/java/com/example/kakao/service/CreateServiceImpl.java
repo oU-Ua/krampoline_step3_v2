@@ -138,7 +138,7 @@ public class CreateServiceImpl implements CreateService {
                 "\n" +
                 "입력한 여행지 : ");
         prompt.append(keyword);
-        prompt.append("사담은 필요없어.");
+        prompt.append("\n사담은 필요없어.");
         messages.add(new Message("user", prompt.toString()));
 
         ChatGPTRequestDTO chatGptRequest = new ChatGPTRequestDTO("gpt-4", messages, 0.7);
