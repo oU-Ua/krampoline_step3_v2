@@ -178,7 +178,7 @@ public class CreateServiceImpl implements CreateService {
        prompt.append(keyword);
        prompt.append("+in+Jeju");
        ObjectMapper mapper = new ObjectMapper();
-       ImageRequestDTO imageRequestDTO = new ImageRequestDTO(prompt.toString(),"person");
+       ImageRequestDTO imageRequestDTO = new ImageRequestDTO(prompt.toString(),"person, people, man, woman");
        String input = null;
        try {
            input = mapper.writeValueAsString(imageRequestDTO);
